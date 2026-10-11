@@ -10,6 +10,7 @@ from app.api.routes.auth import router as auth_router
 from app.api.routes.students import router as students_router
 from app.api.routes.academics import router as academics_router
 from app.api.routes.attendance import router as attendance_router
+from app.api.routes.reports import router as reports_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -38,6 +39,7 @@ app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(students_router, prefix=settings.API_V1_STR)
 app.include_router(academics_router, prefix=settings.API_V1_STR)
 app.include_router(attendance_router, prefix=settings.API_V1_STR)
+app.include_router(reports_router, prefix=settings.API_V1_STR)
 
 @app.get(f"{settings.API_V1_STR}/health", tags=["System"])
 def health_check(db: Session = Depends(get_db)):

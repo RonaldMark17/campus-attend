@@ -1,8 +1,8 @@
-import { LogOut, WifiOff, ShieldCheck, User as UserIcon, LayoutDashboard, Users, BookOpen, UserCheck, FileCheck2 } from 'lucide-react'
+import { LogOut, WifiOff, ShieldCheck, User as UserIcon, LayoutDashboard, Users, BookOpen, UserCheck, FileCheck2, BarChart3 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import type { UserRole } from '../types/auth'
 
-export type NavTab = 'dashboard' | 'students' | 'academics' | 'attendance' | 'corrections'
+export type NavTab = 'dashboard' | 'students' | 'academics' | 'attendance' | 'corrections' | 'reports'
 
 interface NavbarProps {
   activeTab: NavTab
@@ -113,6 +113,19 @@ export function Navbar({ activeTab, onTabChange }: NavbarProps) {
               >
                 <BookOpen className="w-3.5 h-3.5 mr-1.5" />
                 Academics
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onTabChange('reports')}
+                className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                  activeTab === 'reports'
+                    ? 'bg-slate-800 text-emerald-400'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-850'
+                }`}
+              >
+                <BarChart3 className="w-3.5 h-3.5 mr-1.5" />
+                Reports
               </button>
             </nav>
           )}

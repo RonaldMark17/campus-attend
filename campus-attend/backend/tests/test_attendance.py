@@ -148,6 +148,8 @@ def test_attendance_correction_request_and_approval(client, db):
     if not record:
         offering = db.query(ClassOffering).filter(ClassOffering.instructor_id != None).first()
         enrollment = db.query(Enrollment).filter_by(class_offering_id=offering.id).first()
+        db.query(ClassMeeting).filter_by(class_offering_id=offering.id, meeting_date=date(2026, 11, 15)).delete()
+        db.commit()
         meeting = ClassMeeting(
             class_offering_id=offering.id,
             meeting_date=date(2026, 11, 15),

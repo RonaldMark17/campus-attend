@@ -4,6 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import Response
+
 from app.core.config import settings
 from app.core.database import get_db
 from app.api.routes.auth import router as auth_router
@@ -11,6 +15,7 @@ from app.api.routes.students import router as students_router
 from app.api.routes.academics import router as academics_router
 from app.api.routes.attendance import router as attendance_router
 from app.api.routes.reports import router as reports_router
+from app.api.routes.audit import router as audit_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -20,6 +25,19 @@ app = FastAPI(
     redoc_url=f"{settings.API_V1_STR}/redoc",
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
+
+# Custom Security Headers Middleware (Phase 7 Hardening)
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response: Response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 # CORS configuration for school LAN clients
 app.add_middleware(
@@ -40,6 +58,7 @@ app.include_router(students_router, prefix=settings.API_V1_STR)
 app.include_router(academics_router, prefix=settings.API_V1_STR)
 app.include_router(attendance_router, prefix=settings.API_V1_STR)
 app.include_router(reports_router, prefix=settings.API_V1_STR)
+app.include_router(audit_router, prefix=settings.API_V1_STR)
 
 @app.get(f"{settings.API_V1_STR}/health", tags=["System"])
 def health_check(db: Session = Depends(get_db)):

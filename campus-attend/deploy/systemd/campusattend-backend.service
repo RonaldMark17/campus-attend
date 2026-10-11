@@ -1,0 +1,29 @@
+[Unit]
+Description=CampusAttend Offline Attendance Management System Backend
+After=network.target
+
+[Service]
+Type=simple
+User=campusattend
+Group=campusattend
+WorkingDirectory=/opt/campusattend/backend
+Environment="PATH=/opt/campusattend/backend/venv/bin"
+EnvironmentFile=/opt/campusattend/backend/.env
+ExecStart=/opt/campusattend/backend/venv/bin/gunicorn app.main:app \
+    --workers 4 \
+    --worker-class uvicorn.workers.UvicornWorker \
+    --bind 127.0.0.1:8000 \
+    --access-logfile /var/log/campusattend/access.log \
+    --error-logfile /var/log/campusattend/error.log \
+    --timeout 60
+
+Restart=always
+RestartSec=5s
+
+# Security sandboxing
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

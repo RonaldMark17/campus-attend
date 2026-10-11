@@ -6,6 +6,7 @@ import { StudentsPage } from './pages/Students'
 import { AcademicsPage } from './pages/Academics'
 import { TakeAttendancePage } from './pages/TakeAttendance'
 import { CorrectionsPage } from './pages/Corrections'
+import { ReportsPage } from './pages/Reports'
 import { Navbar, type NavTab } from './components/Navbar'
 import { Clock } from 'lucide-react'
 
@@ -33,6 +34,7 @@ function MainContent() {
         {activeTab === 'dashboard' && <DashboardPage />}
         {activeTab === 'attendance' && <TakeAttendancePage />}
         {activeTab === 'corrections' && <CorrectionsPage />}
+        {activeTab === 'reports' && <ReportsPage />}
         {activeTab === 'students' && <StudentsPage />}
         {activeTab === 'academics' && <AcademicsPage />}
       </main>

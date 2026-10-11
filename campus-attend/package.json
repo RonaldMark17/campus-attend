@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -n \"FASTAPI,VITE\" -c \"cyan,magenta\" \"npm run dev:backend\" \"npm run dev:frontend\",
+    "dev": "concurrently -n \"FASTAPI,VITE\" -c \"cyan,magenta\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "powershell -ExecutionPolicy Bypass -Command \"Set-Location backend; .\\venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8000\"",
     "dev:frontend": "npm --prefix frontend run dev:frontend",
     "build": "npm --prefix frontend run build",

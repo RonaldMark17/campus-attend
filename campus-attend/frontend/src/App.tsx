@@ -28,7 +28,7 @@ function MainContent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col">
       <Navbar activeTab={activeTab} onTabChange={setActiveTab} />
       <main className="flex-1">
         {activeTab === 'dashboard' && <DashboardPage />}

@@ -1,4 +1,13 @@
-import { LogOut, WifiOff, ShieldCheck, User as UserIcon, LayoutDashboard, Users, BookOpen, UserCheck, FileCheck2, BarChart3 } from 'lucide-react'
+import {
+  LogOut,
+  LayoutDashboard,
+  Users,
+  BookOpen,
+  UserCheck,
+  FileCheck2,
+  BarChart3,
+  Wifi
+} from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import type { UserRole } from '../types/auth'
 
@@ -15,150 +24,107 @@ export function Navbar({ activeTab, onTabChange }: NavbarProps) {
   const getRoleBadge = (role: UserRole) => {
     switch (role) {
       case 'admin':
-        return { label: 'Administrator', bg: 'bg-purple-900/60 text-purple-300 border-purple-700' }
+        return { label: 'Admin', bg: 'text-purple-400 bg-purple-500/10 border-purple-500/20' }
       case 'instructor':
-        return { label: 'Instructor', bg: 'bg-emerald-900/60 text-emerald-300 border-emerald-700' }
+        return { label: 'Instructor', bg: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' }
       case 'dept_head':
-        return { label: 'Department Head', bg: 'bg-blue-900/60 text-blue-300 border-blue-700' }
+        return { label: 'Dept Head', bg: 'text-sky-400 bg-sky-500/10 border-sky-500/20' }
       case 'registrar':
-        return { label: 'Registrar', bg: 'bg-amber-900/60 text-amber-300 border-amber-700' }
+        return { label: 'Registrar', bg: 'text-amber-400 bg-amber-500/10 border-amber-500/20' }
       default:
-        return { label: role, bg: 'bg-slate-800 text-slate-300 border-slate-700' }
+        return { label: role, bg: 'text-slate-400 bg-slate-800 border-slate-700' }
     }
   }
 
   const roleInfo = user ? getRoleBadge(user.role) : null
 
+  const navItems = [
+    { id: 'dashboard' as NavTab, label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'attendance' as NavTab, label: 'Attendance', icon: UserCheck },
+    { id: 'corrections' as NavTab, label: 'Corrections', icon: FileCheck2 },
+    { id: 'reports' as NavTab, label: 'Reports', icon: BarChart3 },
+    { id: 'students' as NavTab, label: 'Students', icon: Users },
+    { id: 'academics' as NavTab, label: 'Academics', icon: BookOpen },
+  ]
+
   return (
-    <header className="bg-slate-900 border-b border-slate-800 text-white shadow-sm sticky top-0 z-50">
-      <div className="px-6 py-3 flex flex-wrap items-center justify-between">
-        <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => onTabChange('dashboard')}>
-            <div className="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-lg tracking-wider text-white shadow-sm">
+    <header className="sticky top-0 z-50 bg-[#090d16]/95 backdrop-blur-md border-b border-white/[0.08]">
+      {/* Primary single-line navbar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+        {/* Brand */}
+        <div className="flex items-center space-x-6 shrink-0">
+          <div
+            className="flex items-center space-x-2.5 cursor-pointer select-none group"
+            onClick={() => onTabChange('dashboard')}
+          >
+            <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-xs text-white shadow-xs group-hover:bg-emerald-500 transition-colors">
               CA
             </div>
-            <div>
-              <span className="text-lg font-bold tracking-tight text-white flex items-center">
-                CampusAttend
-                <span className="ml-2 text-[11px] font-normal px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 hidden sm:inline-block">
-                  AY 2026-2027 1S
-                </span>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-semibold text-white tracking-tight">CampusAttend</span>
+              <span className="hidden sm:inline-block text-[10px] font-medium text-slate-400 px-1.5 py-0.5 rounded bg-slate-800/80 border border-slate-700/60">
+                AY 2026–27
               </span>
             </div>
           </div>
 
-          {/* Navigation Tabs */}
+          {/* Desktop Navigation Links */}
           {user && (
-            <nav className="flex items-center space-x-1 pl-4 border-l border-slate-800">
-              <button
-                type="button"
-                onClick={() => onTabChange('dashboard')}
-                className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                  activeTab === 'dashboard'
-                    ? 'bg-slate-800 text-emerald-400'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-850'
-                }`}
-              >
-                <LayoutDashboard className="w-3.5 h-3.5 mr-1.5" />
-                Dashboard
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onTabChange('attendance')}
-                className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                  activeTab === 'attendance'
-                    ? 'bg-slate-800 text-emerald-400'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-850'
-                }`}
-              >
-                <UserCheck className="w-3.5 h-3.5 mr-1.5" />
-                Take Attendance
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onTabChange('corrections')}
-                className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                  activeTab === 'corrections'
-                    ? 'bg-slate-800 text-emerald-400'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-850'
-                }`}
-              >
-                <FileCheck2 className="w-3.5 h-3.5 mr-1.5" />
-                Corrections
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onTabChange('students')}
-                className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                  activeTab === 'students'
-                    ? 'bg-slate-800 text-emerald-400'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-850'
-                }`}
-              >
-                <Users className="w-3.5 h-3.5 mr-1.5" />
-                Students
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onTabChange('academics')}
-                className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                  activeTab === 'academics'
-                    ? 'bg-slate-800 text-emerald-400'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-850'
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5 mr-1.5" />
-                Academics
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onTabChange('reports')}
-                className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                  activeTab === 'reports'
-                    ? 'bg-slate-800 text-emerald-400'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-850'
-                }`}
-              >
-                <BarChart3 className="w-3.5 h-3.5 mr-1.5" />
-                Reports
-              </button>
+            <nav className="hidden lg:flex items-center space-x-1 pl-4 border-l border-white/[0.08]">
+              {navItems.map(({ id, label, icon: Icon }) => {
+                const isActive = activeTab === id
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => onTabChange(id)}
+                    className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                      isActive
+                        ? 'bg-slate-800 text-white shadow-xs border border-slate-700/70'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 border border-transparent'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5 shrink-0" />
+                    <span>{label}</span>
+                  </button>
+                )
+              })}
             </nav>
           )}
         </div>
 
-        <div className="flex items-center space-x-3 mt-2 sm:mt-0">
-          <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-950 text-emerald-300 border border-emerald-800">
-            <WifiOff className="w-3 h-3 mr-1" />
-            Offline LAN
-          </span>
-          <span className="hidden lg:inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
-            <ShieldCheck className="w-3 h-3 mr-1 text-emerald-400" />
-            RA 10173
-          </span>
+        {/* Right Status Indicators & User Profile */}
+        <div className="flex items-center space-x-3 shrink-0">
+          {/* Offline LAN Badge */}
+          <div className="hidden sm:inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <Wifi className="w-3 h-3 text-slate-400" />
+            <span>Offline LAN</span>
+          </div>
 
+          {/* User Profile */}
           {user && (
-            <div className="flex items-center pl-3 border-l border-slate-700 space-x-3">
-              <div className="text-right">
-                <div className="text-xs font-semibold text-slate-200 flex items-center justify-end">
-                  <UserIcon className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                  {user.full_name}
+            <div className="flex items-center space-x-3 pl-3 border-l border-white/[0.08]">
+              <div className="flex items-center space-x-2">
+                <div className="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-semibold text-xs text-slate-200">
+                  {user.full_name.charAt(0)}
                 </div>
-                {roleInfo && (
-                  <span className={`inline-block text-[10px] uppercase font-bold px-1.5 py-0.2 rounded border ${roleInfo.bg} mt-0.5`}>
-                    {roleInfo.label}
-                  </span>
-                )}
+                <div className="hidden md:block text-left">
+                  <div className="text-xs font-medium text-slate-200 leading-none">
+                    {user.full_name}
+                  </div>
+                  {roleInfo && (
+                    <span className={`inline-block text-[9px] font-medium uppercase tracking-wider px-1.5 py-0.2 rounded border ${roleInfo.bg} mt-1`}>
+                      {roleInfo.label}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <button
                 onClick={() => logout()}
                 title="Sign Out"
-                className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-md transition-colors"
+                className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-md transition-colors"
               >
                 <LogOut className="w-4 h-4" />
               </button>
@@ -166,6 +132,30 @@ export function Navbar({ activeTab, onTabChange }: NavbarProps) {
           )}
         </div>
       </div>
+
+      {/* Sub-bar Navigation for screens below LG breakpoint */}
+      {user && (
+        <div className="lg:hidden flex items-center space-x-1 px-4 py-2 border-t border-white/[0.06] overflow-x-auto bg-[#090d16]">
+          {navItems.map(({ id, label, icon: Icon }) => {
+            const isActive = activeTab === id
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => onTabChange(id)}
+                className={`flex items-center space-x-1 px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+                  isActive
+                    ? 'bg-slate-800 text-white border border-slate-700/70'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Icon className="w-3 h-3 shrink-0" />
+                <span>{label}</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
     </header>
   )
 }

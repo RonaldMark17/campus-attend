@@ -4,12 +4,10 @@ import {
   XCircle,
   Clock,
   AlertCircle,
-  FileCheck2,
   RefreshCw,
   Search,
   Check,
-  X,
-  FileText
+  X
 } from 'lucide-react'
 import {
   fetchCorrectionRequests,
@@ -101,235 +99,223 @@ export function CorrectionsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'present':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase">Present</span>
+        return <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase">Present</span>
       case 'late':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200 uppercase">Late</span>
+        return <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase">Late</span>
       case 'absent':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200 uppercase">Absent</span>
+        return <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase">Absent</span>
       case 'excused':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-blue-800 border border-blue-200 uppercase">Excused</span>
+        return <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20 uppercase">Excused</span>
       default:
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200 uppercase">{status}</span>
+        return <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-800 text-slate-400 border border-slate-700 uppercase">{status}</span>
     }
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center">
-            <FileCheck2 className="w-7 h-7 mr-2 text-indigo-600" />
-            Attendance Corrections
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Official correction workflow for submitted rosters • Department Head & Administrator approval required
+          <div className="flex items-center space-x-2">
+            <h1 className="text-xl font-semibold text-white tracking-tight">
+              Attendance Corrections
+            </h1>
+            {pendingCount > 0 && (
+              <span className="text-xs font-medium text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                {pendingCount} pending review
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-slate-400 mt-1">
+            Department Head and Administrator approval queue for locked attendance rosters
           </p>
         </div>
         <div className="flex items-center space-x-2">
           <button
             onClick={() => loadRequests()}
-            className="inline-flex items-center px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 shadow-sm"
+            className="inline-flex items-center px-3 py-1.5 border border-white/[0.08] rounded-lg text-xs font-medium text-slate-300 bg-slate-800/80 hover:bg-slate-700 shadow-xs transition-colors"
           >
-            <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? 'animate-spin text-emerald-400' : ''}`} />
+            Refresh Queue
           </button>
         </div>
       </div>
 
       {/* Role Notice */}
       {!canReview && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start space-x-3 text-amber-900 text-xs">
-          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+        <div className="bg-[#0d1322] border border-amber-500/20 rounded-xl p-3.5 flex items-start space-x-2.5 text-slate-300 text-xs">
+          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <div>
-            <span className="font-bold">Viewing in Read-Only Mode:</span> As an{' '}
-            <span className="capitalize font-semibold">{user?.role}</span>, you can submit correction requests
-            from the Take Attendance tab. Review and approval of requests is restricted to Department Heads and System Administrators.
+            <span className="font-semibold text-white">Viewing in Read-Only Mode:</span> As an{' '}
+            <span className="capitalize font-medium text-slate-200">{user?.role}</span>, you can submit correction requests
+            from the Attendance tab. Review and approval is authorized for Department Heads and Administrators.
           </div>
         </div>
       )}
 
       {/* Alerts */}
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs flex items-center justify-between">
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-300 px-3.5 py-2.5 rounded-lg text-xs flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <XCircle className="w-4 h-4 text-rose-600 flex-shrink-0" />
+            <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
             <span>{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="text-rose-500 hover:text-rose-700">
+          <button onClick={() => setError(null)} className="text-rose-400 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
       {successMessage && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl text-xs flex items-center justify-between">
+        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 px-3.5 py-2.5 rounded-lg text-xs flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{successMessage}</span>
           </div>
-          <button onClick={() => setSuccessMessage(null)} className="text-emerald-500 hover:text-emerald-700">
+          <button onClick={() => setSuccessMessage(null)} className="text-emerald-400 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* Filter and Search Bar */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center space-x-2 overflow-x-auto w-full md:w-auto">
-          {(['all', 'pending', 'approved', 'rejected'] as const).map((status) => (
-            <button
-              key={status}
-              onClick={() => setStatusFilter(status)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition-colors flex items-center ${
-                statusFilter === status
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              {status}
-              {status === 'pending' && pendingCount > 0 && (
-                <span className="ml-1.5 px-1.5 py-0.2 bg-amber-500 text-white rounded-full text-[10px]">
-                  {pendingCount}
-                </span>
-              )}
-            </button>
-          ))}
+      {/* Main Table Card */}
+      <div className="bg-[#0d1322] rounded-xl border border-white/[0.08] shadow-xs overflow-hidden">
+        {/* Filter and Search Bar */}
+        <div className="p-3 border-b border-white/[0.06] bg-[#090d16]/50 flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="flex items-center space-x-1 overflow-x-auto w-full md:w-auto">
+            {(['all', 'pending', 'approved', 'rejected'] as const).map((status) => (
+              <button
+                key={status}
+                onClick={() => setStatusFilter(status)}
+                className={`px-3 py-1 rounded-md text-xs font-medium capitalize transition-colors ${
+                  statusFilter === status
+                    ? 'bg-slate-800 text-white border border-slate-700/80'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/40 border border-transparent'
+                }`}
+              >
+                {status}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative w-full md:w-64">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-500" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Filter by student, subject..."
+              className="w-full pl-8 pr-3 py-1.5 bg-[#070a12] border border-white/[0.1] rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+            />
+          </div>
         </div>
 
-        <div className="relative w-full md:w-72">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search student, code, or instructor..."
-            className="w-full pl-9 pr-3 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-      </div>
-
-      {/* Requests Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        {/* Requests Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead className="bg-[#090e1b] border-b border-white/[0.06] text-slate-400 uppercase tracking-wider font-semibold text-[11px]">
               <tr>
-                <th className="px-4 py-3">Student & Subject</th>
-                <th className="px-4 py-3">Meeting Date</th>
-                <th className="px-4 py-3 text-center">Status Change</th>
-                <th className="px-4 py-3">Instructor Justification</th>
-                <th className="px-4 py-3">Requested By</th>
-                <th className="px-4 py-3 text-center">Review Decision</th>
-                {canReview && <th className="px-4 py-3 text-right">Actions</th>}
+                <th className="py-2.5 px-4 w-[25%]">Student & Subject</th>
+                <th className="py-2.5 px-4 w-[12%]">Meeting Date</th>
+                <th className="py-2.5 px-4 text-center w-[18%]">Status Adjustment</th>
+                <th className="py-2.5 px-4 w-[25%]">Reason & Justification</th>
+                <th className="py-2.5 px-4 text-center w-[10%]">Decision</th>
+                {canReview && <th className="py-2.5 px-4 text-right w-[10%]">Action</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
-              {loading && requests.length === 0 ? (
+            <tbody className="divide-y divide-white/[0.04] text-slate-300">
+              {loading ? (
                 <tr>
-                  <td colSpan={canReview ? 7 : 6} className="py-12 text-center text-slate-400">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-indigo-500" />
-                    Loading correction audit trail...
+                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                    Loading correction queue...
                   </td>
                 </tr>
               ) : filteredRequests.length === 0 ? (
                 <tr>
-                  <td colSpan={canReview ? 7 : 6} className="py-12 text-center text-slate-400">
-                    <FileText className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-                    No attendance correction requests found.
+                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                    No correction requests found matching filter criteria.
                   </td>
                 </tr>
               ) : (
                 filteredRequests.map((req) => (
-                  <tr key={req.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={req.id} className="hover:bg-white/[0.02] transition-colors">
                     {/* Student & Subject */}
-                    <td className="px-4 py-3">
-                      <div className="font-bold text-slate-900">{req.student_name || 'Student'}</div>
-                      <div className="text-[11px] text-slate-500 font-mono">
-                        {req.student_number || 'N/A'} • <span className="font-semibold text-indigo-600">{req.subject_code || 'Subject'}</span>
+                    <td className="py-3 px-4">
+                      <div className="font-medium text-white text-xs">{req.student_name || 'Student'}</div>
+                      <div className="text-[11px] text-slate-400 tabular-nums">
+                        {req.student_number || 'N/A'} • <span className="text-slate-300">{req.subject_code || 'Subject'}</span>
                       </div>
                     </td>
 
                     {/* Meeting Date */}
-                    <td className="px-4 py-3 font-mono text-slate-600">
+                    <td className="py-3 px-4 text-slate-300 tabular-nums">
                       {req.meeting_date || 'N/A'}
                     </td>
 
                     {/* Status Change */}
-                    <td className="px-4 py-3 text-center">
+                    <td className="py-3 px-4 text-center">
                       <div className="inline-flex items-center space-x-1.5">
                         {getStatusBadge(req.current_status || 'unmarked')}
-                        <span className="text-slate-400 font-bold">➔</span>
+                        <span className="text-slate-500 text-xs">→</span>
                         {getStatusBadge(req.requested_status)}
                       </div>
                     </td>
 
                     {/* Reason */}
-                    <td className="px-4 py-3 max-w-xs">
-                      <p className="text-slate-800 line-clamp-2" title={req.reason}>
+                    <td className="py-3 px-4">
+                      <p className="text-slate-300 text-xs line-clamp-2" title={req.reason}>
                         {req.reason}
                       </p>
-                    </td>
-
-                    {/* Requested By */}
-                    <td className="px-4 py-3">
-                      <div className="font-medium text-slate-800">{req.requested_by_name || 'Instructor'}</div>
-                      <div className="text-[10px] text-slate-400">
-                        {new Date(req.created_at).toLocaleDateString()}
+                      <div className="text-[11px] text-slate-500 mt-0.5">
+                        by {req.requested_by_name || 'Instructor'}
                       </div>
                     </td>
 
                     {/* Review Decision */}
-                    <td className="px-4 py-3 text-center">
+                    <td className="py-3 px-4 text-center">
                       {req.review_status === 'pending' && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
                           <Clock className="w-3 h-3 mr-1" />
-                          Pending Review
+                          Pending
                         </span>
                       )}
                       {req.review_status === 'approved' && (
                         <div>
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                             <Check className="w-3 h-3 mr-1" />
                             Approved
                           </span>
-                          {req.reviewed_by_name && (
-                            <div className="text-[10px] text-slate-400 mt-0.5">by {req.reviewed_by_name}</div>
-                          )}
                         </div>
                       )}
                       {req.review_status === 'rejected' && (
                         <div>
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">
                             <X className="w-3 h-3 mr-1" />
                             Rejected
                           </span>
-                          {req.reviewed_by_name && (
-                            <div className="text-[10px] text-slate-400 mt-0.5">by {req.reviewed_by_name}</div>
-                          )}
                         </div>
                       )}
                     </td>
 
                     {/* Actions for Dept Head / Admin */}
                     {canReview && (
-                      <td className="px-4 py-3 text-right">
+                      <td className="py-3 px-4 text-right">
                         {req.review_status === 'pending' ? (
                           <div className="inline-flex items-center space-x-1.5">
                             <button
                               onClick={() => handleOpenReview(req, 'approved')}
-                              className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[11px] font-bold shadow-sm transition-colors"
+                              className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-xs font-medium transition-colors"
                             >
                               Approve
                             </button>
                             <button
                               onClick={() => handleOpenReview(req, 'rejected')}
-                              className="px-2.5 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded text-[11px] font-bold shadow-sm transition-colors"
+                              className="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded text-xs font-medium transition-colors"
                             >
                               Reject
                             </button>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-slate-400 italic">Closed</span>
+                          <span className="text-[11px] text-slate-500">Archived</span>
                         )}
                       </td>
                     )}
@@ -343,88 +329,64 @@ export function CorrectionsPage() {
 
       {/* Review Modal Dialog */}
       {selectedRequest && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
-            <div className={`p-4 border-b text-white flex items-center justify-between ${
-              reviewAction === 'approved' ? 'bg-emerald-700' : 'bg-rose-700'
-            }`}>
-              <div className="flex items-center space-x-2 font-bold text-sm">
-                {reviewAction === 'approved' ? (
-                  <CheckCircle className="w-5 h-5 text-emerald-200" />
-                ) : (
-                  <XCircle className="w-5 h-5 text-rose-200" />
-                )}
-                <span>
-                  {reviewAction === 'approved' ? 'Approve Attendance Correction' : 'Reject Correction Request'}
-                </span>
-              </div>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-[#0f1523] rounded-xl max-w-md w-full shadow-2xl border border-white/[0.1] overflow-hidden text-slate-100">
+            <div className="p-4 border-b border-white/[0.08] text-white flex items-center justify-between">
+              <h3 className="text-sm font-semibold capitalize">
+                {reviewAction} Correction Request
+              </h3>
               <button
                 onClick={() => setSelectedRequest(null)}
-                className="text-white/80 hover:text-white"
+                className="text-slate-400 hover:text-white p-1 rounded transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleConfirmReview} className="p-5 space-y-4 text-xs text-slate-700">
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1">
-                <div>
-                  <span className="font-semibold text-slate-500">Student: </span>
-                  <span className="font-bold text-slate-900">{selectedRequest.student_name}</span> ({selectedRequest.student_number})
-                </div>
-                <div>
-                  <span className="font-semibold text-slate-500">Requested Change: </span>
-                  <span className="capitalize font-medium text-slate-700">{selectedRequest.current_status}</span> ➔{' '}
-                  <span className="capitalize font-bold text-indigo-700">{selectedRequest.requested_status}</span>
-                </div>
-                <div>
-                  <span className="font-semibold text-slate-500">Instructor's Reason: </span>
-                  <span className="italic text-slate-800">"{selectedRequest.reason}"</span>
-                </div>
-              </div>
-
+            <form onSubmit={handleConfirmReview} className="p-4 space-y-3.5 text-xs">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Official Review Note / Audit Justification
+                <span className="text-slate-400">Student: </span>
+                <span className="font-medium text-white">{selectedRequest.student_name}</span> ({selectedRequest.student_number})
+              </div>
+              <div>
+                <span className="text-slate-400">Target Meeting: </span>
+                <span className="font-medium text-slate-200">{selectedRequest.meeting_date}</span> ({selectedRequest.subject_code})
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-slate-400">Status Change: </span>
+                {getStatusBadge(selectedRequest.current_status || 'unmarked')}
+                <span className="text-slate-500">→</span>
+                {getStatusBadge(selectedRequest.requested_status)}
+              </div>
+              <div>
+                <label className="block text-slate-300 font-medium mb-1">
+                  Official Decision Notes / Remarks
                 </label>
                 <textarea
                   rows={3}
                   value={reviewNotes}
                   onChange={(e) => setReviewNotes(e.target.value)}
-                  placeholder={
-                    reviewAction === 'approved'
-                      ? 'e.g. Verified with attached medical slip from college clinic.'
-                      : 'e.g. Disapproved due to exceeding the 7-day correction window.'
-                  }
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder={`Reason for ${reviewAction} this correction...`}
+                  className="w-full px-3 py-1.5 bg-[#070a12] border border-white/[0.1] rounded-lg text-white text-xs focus:outline-none focus:border-emerald-500"
                 />
-                <p className="text-[10px] text-slate-400 mt-1">
-                  This decision will be permanently committed to the security audit log.
-                </p>
               </div>
 
-              <div className="flex justify-end space-x-2 pt-2 border-t border-slate-100">
+              <div className="flex justify-end space-x-2 pt-2 border-t border-white/[0.08]">
                 <button
                   type="button"
                   onClick={() => setSelectedRequest(null)}
-                  className="px-4 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submittingReview}
-                  className={`px-4 py-2 text-white rounded-lg text-xs font-bold shadow-sm transition-colors disabled:opacity-50 ${
-                    reviewAction === 'approved'
-                      ? 'bg-emerald-600 hover:bg-emerald-500'
-                      : 'bg-rose-600 hover:bg-rose-500'
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium text-white transition-colors disabled:opacity-50 ${
+                    reviewAction === 'approved' ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-rose-600 hover:bg-rose-500'
                   }`}
                 >
-                  {submittingReview
-                    ? 'Recording Decision...'
-                    : reviewAction === 'approved'
-                    ? 'Confirm Approval'
-                    : 'Confirm Rejection'}
+                  {submittingReview ? 'Recording...' : `Confirm ${reviewAction}`}
                 </button>
               </div>
             </form>

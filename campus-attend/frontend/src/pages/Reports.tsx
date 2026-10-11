@@ -6,7 +6,6 @@ import {
   AlertTriangle,
   CheckCircle2,
   BookOpen,
-  BarChart3,
   Search,
   Loader2,
   X
@@ -80,64 +79,65 @@ export function ReportsPage() {
   }, [loadActiveReport])
 
   // Filter students in current report
-  const filteredOfferingStudents = offeringReport?.students.filter((s) => {
-    if (!searchTerm) return true
-    const q = searchTerm.toLowerCase()
-    return s.student_name.toLowerCase().includes(q) || s.student_number.toLowerCase().includes(q)
-  }) || []
+  const filteredOfferingStudents =
+    offeringReport?.students.filter((s) => {
+      if (!searchTerm) return true
+      const q = searchTerm.toLowerCase()
+      return s.student_name.toLowerCase().includes(q) || s.student_number.toLowerCase().includes(q)
+    }) || []
 
-  const filteredDailyRecords = dailyReport?.records.filter((r) => {
-    if (!searchTerm) return true
-    const q = searchTerm.toLowerCase()
-    return r.student_name.toLowerCase().includes(q) || r.student_number.toLowerCase().includes(q)
-  }) || []
+  const filteredDailyRecords =
+    dailyReport?.records.filter((r) => {
+      if (!searchTerm) return true
+      const q = searchTerm.toLowerCase()
+      return r.student_name.toLowerCase().includes(q) || r.student_number.toLowerCase().includes(q)
+    }) || []
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center">
-            <BarChart3 className="w-7 h-7 mr-2 text-indigo-600" />
-            Attendance Reports & Analytics
+          <h1 className="text-xl font-semibold text-white tracking-tight">
+            Attendance Reports
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Aggregate attendance rates • CHED-compliant Absence Thresholds • Local CSV & PDF export engine
+          <p className="text-xs text-slate-400 mt-1">
+            Aggregate attendance rates and official reports
           </p>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl">
+        <div className="flex items-center space-x-1 bg-slate-900 border border-white/[0.08] p-1 rounded-lg">
           <button
             onClick={() => setActiveReportTab('offering')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+            className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
               activeReportTab === 'offering'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-slate-800 text-white shadow-xs border border-slate-700/80'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
-            Semester Aggregated
+            Semester Summary
           </button>
           <button
             onClick={() => setActiveReportTab('daily')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+            className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
               activeReportTab === 'daily'
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-slate-800 text-white shadow-xs border border-slate-700/80'
+                : 'text-slate-400 hover:text-white'
             }`}
           >
-            Daily Class Sheet
+            Daily Sheet
           </button>
           {(user?.role === 'admin' || user?.role === 'dept_head' || user?.role === 'registrar') && (
             <button
               onClick={() => setActiveReportTab('incomplete')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                 activeReportTab === 'incomplete'
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-slate-800 text-white shadow-xs border border-slate-700/80'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              Incomplete Tracking
+              Incomplete Sessions
             </button>
           )}
         </div>
@@ -145,9 +145,9 @@ export function ReportsPage() {
 
       {/* Error alert */}
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs flex items-center justify-between">
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-300 px-3.5 py-2.5 rounded-lg text-xs flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError(null)} className="text-rose-500 hover:text-rose-700">
+          <button onClick={() => setError(null)} className="text-rose-400 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -155,25 +155,25 @@ export function ReportsPage() {
 
       {/* Loading banner */}
       {loading && (
-        <div className="flex items-center space-x-2 text-xs text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-2 rounded-lg">
-          <Loader2 className="w-4 h-4 animate-spin" />
+        <div className="flex items-center space-x-2 text-xs text-slate-300 bg-[#0d1322] border border-white/[0.08] px-3.5 py-2.5 rounded-lg">
+          <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
           <span>Generating report metrics from offline database...</span>
         </div>
       )}
 
       {/* Control Bar: Offering & Date Selector + Export Buttons */}
       {activeReportTab !== 'incomplete' && (
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-[#0d1322] p-4 rounded-xl border border-white/[0.08] shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
             <div className="flex items-center space-x-2">
-              <label className="text-xs font-bold text-slate-600 flex items-center">
-                <BookOpen className="w-3.5 h-3.5 mr-1 text-slate-400" />
+              <label className="text-xs font-medium text-slate-300 flex items-center">
+                <BookOpen className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
                 Class Offering:
               </label>
               <select
                 value={selectedOfferingId}
                 onChange={(e) => setSelectedOfferingId(e.target.value)}
-                className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="px-3 py-1.5 border border-white/[0.1] rounded-lg text-xs text-white bg-[#070a12] focus:outline-none focus:border-emerald-500"
               >
                 {offerings.map((o) => (
                   <option key={o.id} value={o.id}>
@@ -185,15 +185,15 @@ export function ReportsPage() {
 
             {activeReportTab === 'daily' && (
               <div className="flex items-center space-x-2">
-                <label className="text-xs font-bold text-slate-600 flex items-center">
-                  <Calendar className="w-3.5 h-3.5 mr-1 text-slate-400" />
+                <label className="text-xs font-medium text-slate-300 flex items-center">
+                  <Calendar className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
                   Date:
                 </label>
                 <input
                   type="date"
                   value={meetingDate}
                   onChange={(e) => setMeetingDate(e.target.value)}
-                  className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="px-3 py-1.5 border border-white/[0.1] rounded-lg text-xs text-white bg-[#070a12] focus:outline-none focus:border-emerald-500"
                 />
               </div>
             )}
@@ -206,15 +206,15 @@ export function ReportsPage() {
                 <a
                   href={`/api/v1/reports/offering/${selectedOfferingId}/csv`}
                   download
-                  className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors shadow-sm"
+                  className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700/80 hover:bg-slate-700 hover:text-white transition-colors"
                 >
-                  <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5 text-emerald-600" />
+                  <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
                   Export CSV
                 </a>
                 <a
                   href={`/api/v1/reports/offering/${selectedOfferingId}/pdf`}
                   download
-                  className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-500 transition-colors shadow-sm"
+                  className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-500 transition-colors shadow-xs"
                 >
                   <Download className="w-3.5 h-3.5 mr-1.5" />
                   Official PDF
@@ -226,9 +226,9 @@ export function ReportsPage() {
               <a
                 href={`/api/v1/reports/daily/csv?offering_id=${selectedOfferingId}&meeting_date=${meetingDate}`}
                 download
-                className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors shadow-sm"
+                className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700/80 hover:bg-slate-700 hover:text-white transition-colors"
               >
-                <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5 text-emerald-600" />
+                <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
                 Export Daily CSV
               </a>
             )}
@@ -238,103 +238,105 @@ export function ReportsPage() {
 
       {/* KPI Cards for Offering Report */}
       {activeReportTab === 'offering' && offeringReport && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Average Attendance</div>
-            <div className="text-2xl font-black text-slate-900 mt-1">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-[#0d1322] p-4 rounded-xl border border-white/[0.08] shadow-xs">
+            <div className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Average Attendance</div>
+            <div className="text-2xl font-bold text-white mt-1 tabular-nums">
               {offeringReport.average_attendance_rate}%
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Across all held sessions</div>
+            <div className="text-[11px] text-slate-400 mt-0.5">Across all held sessions</div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Meetings Held</div>
-            <div className="text-2xl font-black text-slate-900 mt-1">
+          <div className="bg-[#0d1322] p-4 rounded-xl border border-white/[0.08] shadow-xs">
+            <div className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Meetings Held</div>
+            <div className="text-2xl font-bold text-white mt-1 tabular-nums">
               {offeringReport.total_meetings_held}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Submitted sessions</div>
+            <div className="text-[11px] text-slate-400 mt-0.5">Submitted sessions</div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Enrolled Students</div>
-            <div className="text-2xl font-black text-slate-900 mt-1">
+          <div className="bg-[#0d1322] p-4 rounded-xl border border-white/[0.08] shadow-xs">
+            <div className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Enrolled Students</div>
+            <div className="text-2xl font-bold text-white mt-1 tabular-nums">
               {offeringReport.total_enrolled_students}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">{offeringReport.section_name} roster</div>
+            <div className="text-[11px] text-slate-400 mt-0.5">{offeringReport.section_name} roster</div>
           </div>
 
-          <div className={`p-4 rounded-xl border shadow-sm ${
-            offeringReport.students_at_risk_count > 0
-              ? 'bg-rose-50 border-rose-200 text-rose-900'
-              : 'bg-emerald-50 border-emerald-200 text-emerald-900'
-          }`}>
-            <div className="text-[11px] font-bold uppercase tracking-wider">Students At Risk (FA)</div>
-            <div className="text-2xl font-black mt-1">
+          <div
+            className={`p-4 rounded-xl border shadow-xs ${
+              offeringReport.students_at_risk_count > 0
+                ? 'bg-rose-500/10 border-rose-500/20 text-rose-300'
+                : 'bg-[#0d1322] border-white/[0.08] text-slate-300'
+            }`}
+          >
+            <div className="text-[11px] font-medium uppercase tracking-wider text-slate-400">At-Risk Students (FA)</div>
+            <div className="text-2xl font-bold mt-1 text-white tabular-nums">
               {offeringReport.students_at_risk_count}
             </div>
-            <div className="text-[10px] opacity-80 mt-0.5">&ge; 20% total absences</div>
+            <div className="text-[11px] text-slate-400 mt-0.5">&ge; 20% total absences</div>
           </div>
         </div>
       )}
 
-      {/* Search Input */}
-      {activeReportTab !== 'incomplete' && (
-        <div className="flex items-center justify-between">
-          <div className="relative w-72">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search student number or name..."
-              className="w-full pl-9 pr-3 py-1.5 border border-slate-200 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+      {/* Main Table Card */}
+      <div className="bg-[#0d1322] rounded-xl border border-white/[0.08] shadow-xs overflow-hidden">
+        {/* Search Header */}
+        {activeReportTab !== 'incomplete' && (
+          <div className="p-3 border-b border-white/[0.06] bg-[#090d16]/50 flex items-center justify-between">
+            <div className="relative w-64">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-500" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search student no. or name..."
+                className="w-full pl-8 pr-3 py-1.5 border border-white/[0.1] rounded-lg text-xs bg-[#070a12] text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Main Table Content */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         {/* VIEW 1: Semester Aggregated Summary */}
         {activeReportTab === 'offering' && (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-[#090e1b] border-b border-white/[0.06] text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
                 <tr>
-                  <th className="px-4 py-3">Student</th>
-                  <th className="px-4 py-3 text-center">Sessions</th>
-                  <th className="px-4 py-3 text-center text-emerald-700">Present</th>
-                  <th className="px-4 py-3 text-center text-amber-700">Late</th>
-                  <th className="px-4 py-3 text-center text-rose-700">Absent</th>
-                  <th className="px-4 py-3 text-center text-blue-700">Excused</th>
-                  <th className="px-4 py-3 text-right">Attendance Rate</th>
-                  <th className="px-4 py-3 text-center">Status</th>
+                  <th className="py-2.5 px-4">Student</th>
+                  <th className="py-2.5 px-4 text-center">Sessions</th>
+                  <th className="py-2.5 px-4 text-center text-emerald-400">Present</th>
+                  <th className="py-2.5 px-4 text-center text-amber-400">Late</th>
+                  <th className="py-2.5 px-4 text-center text-rose-400">Absent</th>
+                  <th className="py-2.5 px-4 text-center text-sky-400">Excused</th>
+                  <th className="py-2.5 px-4 text-right">Attendance Rate</th>
+                  <th className="py-2.5 px-4 text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-white/[0.04] text-slate-300">
                 {filteredOfferingStudents.map((s) => (
-                  <tr key={s.student_id} className={`hover:bg-slate-50/70 ${s.is_at_risk ? 'bg-rose-50/30' : ''}`}>
-                    <td className="px-4 py-3 font-medium">
-                      <div className="font-bold text-slate-900">{s.student_name}</div>
-                      <div className="text-[11px] text-slate-400 font-mono">{s.student_number}</div>
+                  <tr key={s.student_id} className={`hover:bg-white/[0.02] ${s.is_at_risk ? 'bg-rose-500/5' : ''}`}>
+                    <td className="py-3 px-4">
+                      <div className="font-medium text-white text-xs">{s.student_name}</div>
+                      <div className="text-[11px] text-slate-400 tabular-nums">{s.student_number}</div>
                     </td>
-                    <td className="px-4 py-3 text-center font-mono text-slate-600">{s.total_meetings}</td>
-                    <td className="px-4 py-3 text-center font-bold text-emerald-600">{s.present_count}</td>
-                    <td className="px-4 py-3 text-center font-bold text-amber-600">{s.late_count}</td>
-                    <td className="px-4 py-3 text-center font-bold text-rose-600">{s.absent_count}</td>
-                    <td className="px-4 py-3 text-center font-bold text-blue-600">{s.excused_count}</td>
-                    <td className="px-4 py-3 text-right font-mono font-bold text-slate-900">
+                    <td className="py-3 px-4 text-center tabular-nums text-slate-300">{s.total_meetings}</td>
+                    <td className="py-3 px-4 text-center tabular-nums font-medium text-emerald-400">{s.present_count}</td>
+                    <td className="py-3 px-4 text-center tabular-nums font-medium text-amber-400">{s.late_count}</td>
+                    <td className="py-3 px-4 text-center tabular-nums font-medium text-rose-400">{s.absent_count}</td>
+                    <td className="py-3 px-4 text-center tabular-nums font-medium text-sky-400">{s.excused_count}</td>
+                    <td className="py-3 px-4 text-right tabular-nums font-semibold text-white">
                       {s.attendance_rate}%
                     </td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="py-3 px-4 text-center">
                       {s.is_at_risk ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-rose-500/10 text-rose-300 border border-rose-500/20">
                           <AlertTriangle className="w-3 h-3 mr-1" />
-                          At-Risk (FA)
+                          At-Risk
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                          Good Standing
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          Good
                         </span>
                       )}
                     </td>
@@ -348,46 +350,54 @@ export function ReportsPage() {
         {/* VIEW 2: Daily Class Sheet */}
         {activeReportTab === 'daily' && dailyReport && (
           <div className="overflow-x-auto">
-            <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between text-xs gap-3">
-              <div className="flex items-center space-x-4">
-                <span className="font-bold text-slate-900">Session Status: <span className="uppercase text-indigo-700">{dailyReport.meeting_status}</span></span>
-                <span>Present: <b className="text-emerald-700">{dailyReport.present_count}</b></span>
-                <span>Late: <b className="text-amber-700">{dailyReport.late_count}</b></span>
-                <span>Absent: <b className="text-rose-700">{dailyReport.absent_count}</b></span>
-                <span>Excused: <b className="text-blue-700">{dailyReport.excused_count}</b></span>
+            <div className="p-3 bg-[#090d16]/50 border-b border-white/[0.06] flex flex-wrap items-center justify-between text-xs gap-3">
+              <div className="flex items-center space-x-3 text-slate-400">
+                <span className="font-medium text-white">
+                  Status: <span className="uppercase text-slate-200">{dailyReport.meeting_status}</span>
+                </span>
+                <span>Present: <b className="text-emerald-400 tabular-nums">{dailyReport.present_count}</b></span>
+                <span>Late: <b className="text-amber-400 tabular-nums">{dailyReport.late_count}</b></span>
+                <span>Absent: <b className="text-rose-400 tabular-nums">{dailyReport.absent_count}</b></span>
+                <span>Excused: <b className="text-sky-400 tabular-nums">{dailyReport.excused_count}</b></span>
               </div>
-              <div className="font-bold text-slate-800">
-                Daily Rate: <span className="text-emerald-600">{dailyReport.attendance_rate}%</span>
+              <div className="font-semibold text-white">
+                Daily Rate: <span className="text-emerald-400 tabular-nums">{dailyReport.attendance_rate}%</span>
               </div>
             </div>
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-[#090e1b] border-b border-white/[0.06] text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
                 <tr>
-                  <th className="px-4 py-3">Student Number</th>
-                  <th className="px-4 py-3">Student Name</th>
-                  <th className="px-4 py-3 text-center">Status</th>
-                  <th className="px-4 py-3">Remarks</th>
-                  <th className="px-4 py-3 text-right">Recorded At</th>
+                  <th className="py-2.5 px-4">Student Number</th>
+                  <th className="py-2.5 px-4">Student Name</th>
+                  <th className="py-2.5 px-4 text-center">Status</th>
+                  <th className="py-2.5 px-4">Remarks</th>
+                  <th className="py-2.5 px-4 text-right">Recorded At</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-white/[0.04] text-slate-300">
                 {filteredDailyRecords.map((r) => (
-                  <tr key={r.student_number} className="hover:bg-slate-50/70">
-                    <td className="px-4 py-3 font-mono font-semibold text-slate-800">{r.student_number}</td>
-                    <td className="px-4 py-3 font-bold text-slate-900">{r.student_name}</td>
-                    <td className="px-4 py-3 text-center">
-                      <span className={`px-2 py-0.5 rounded text-[11px] font-bold uppercase ${
-                        r.status === 'present' ? 'bg-emerald-100 text-emerald-800' :
-                        r.status === 'late' ? 'bg-amber-100 text-amber-800' :
-                        r.status === 'absent' ? 'bg-rose-100 text-rose-800' :
-                        r.status === 'excused' ? 'bg-blue-100 text-blue-800' :
-                        'bg-slate-100 text-slate-600'
-                      }`}>
+                  <tr key={r.student_number} className="hover:bg-white/[0.02]">
+                    <td className="py-3 px-4 font-medium text-slate-200 tabular-nums">{r.student_number}</td>
+                    <td className="py-3 px-4 font-medium text-white">{r.student_name}</td>
+                    <td className="py-3 px-4 text-center">
+                      <span
+                        className={`px-2 py-0.5 rounded text-[11px] font-medium uppercase ${
+                          r.status === 'present'
+                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                            : r.status === 'late'
+                            ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                            : r.status === 'absent'
+                            ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                            : r.status === 'excused'
+                            ? 'bg-sky-500/10 text-sky-400 border border-sky-500/20'
+                            : 'bg-slate-800 text-slate-400'
+                        }`}
+                      >
                         {r.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-500 italic">{r.remarks || '—'}</td>
-                    <td className="px-4 py-3 text-right font-mono text-slate-400">
+                    <td className="py-3 px-4 text-slate-400 text-xs">{r.remarks || '—'}</td>
+                    <td className="py-3 px-4 text-right text-slate-400 tabular-nums">
                       {r.recorded_at ? new Date(r.recorded_at).toLocaleTimeString() : 'N/A'}
                     </td>
                   </tr>
@@ -400,42 +410,42 @@ export function ReportsPage() {
         {/* VIEW 3: Incomplete Meetings Tracking */}
         {activeReportTab === 'incomplete' && (
           <div className="overflow-x-auto">
-            <div className="p-4 bg-amber-50 border-b border-amber-200 text-amber-900 text-xs flex items-center justify-between">
-              <span>Class sessions that were opened as draft or have missing student entries.</span>
-              <span className="font-bold">{incompleteMeetings.length} sessions pending submission</span>
+            <div className="p-3 bg-[#090d16]/50 border-b border-white/[0.06] text-slate-300 text-xs flex items-center justify-between">
+              <span>Sessions opened as draft or containing missing roster entries.</span>
+              <span className="font-medium text-amber-300">{incompleteMeetings.length} sessions pending</span>
             </div>
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="bg-[#090e1b] border-b border-white/[0.06] text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
                 <tr>
-                  <th className="px-4 py-3">Subject & Section</th>
-                  <th className="px-4 py-3">Instructor</th>
-                  <th className="px-4 py-3">Meeting Date</th>
-                  <th className="px-4 py-3 text-center">Status</th>
-                  <th className="px-4 py-3 text-center text-amber-700">Unmarked Students</th>
+                  <th className="py-2.5 px-4">Subject & Section</th>
+                  <th className="py-2.5 px-4">Instructor</th>
+                  <th className="py-2.5 px-4">Meeting Date</th>
+                  <th className="py-2.5 px-4 text-center">Status</th>
+                  <th className="py-2.5 px-4 text-center text-amber-400">Unmarked Students</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-white/[0.04] text-slate-300">
                 {incompleteMeetings.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-8 text-center text-slate-400">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-                      All class meetings are completely submitted and accounted for!
+                    <td colSpan={5} className="py-12 text-center text-slate-400">
+                      <CheckCircle2 className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
+                      All class meetings are completely submitted and accounted for.
                     </td>
                   </tr>
                 ) : (
                   incompleteMeetings.map((m) => (
-                    <tr key={m.meeting_id} className="hover:bg-slate-50">
-                      <td className="px-4 py-3 font-bold text-slate-900">
+                    <tr key={m.meeting_id} className="hover:bg-white/[0.02]">
+                      <td className="py-3 px-4 font-medium text-white">
                         {m.subject_code} • {m.section_name}
                       </td>
-                      <td className="px-4 py-3 text-slate-700">{m.instructor_name}</td>
-                      <td className="px-4 py-3 font-mono text-slate-600">{m.meeting_date}</td>
-                      <td className="px-4 py-3 text-center">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-100 text-amber-800">
+                      <td className="py-3 px-4 text-slate-300">{m.instructor_name}</td>
+                      <td className="py-3 px-4 text-slate-400 tabular-nums">{m.meeting_date}</td>
+                      <td className="py-3 px-4 text-center">
+                        <span className="px-2 py-0.5 rounded text-[11px] font-medium uppercase bg-amber-500/10 text-amber-300 border border-amber-500/20">
                           {m.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-center font-bold text-amber-600">{m.unmarked_count}</td>
+                      <td className="py-3 px-4 text-center font-medium text-amber-400 tabular-nums">{m.unmarked_count}</td>
                     </tr>
                   ))
                 )}
